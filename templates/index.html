@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpotZip - Descargador de Spotify</title>
+    <meta name="description" content="SpotZip - Descarga canciones y playlists de Spotify de forma fácil y rápida">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">                <div class="card shadow-lg">
+                    <div class="card-header bg-success text-white text-center">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <img src="{{ url_for('static', filename='img/spotzip-logo.svg') }}" 
+                                 alt="SpotZip Logo" width="60" height="60" class="me-3">
+                            <h1 class="mb-0">SpotZip</h1>
+                        </div>
+                        <p class="mb-0">Descarga canciones y playlists de Spotify en formato ZIP</p>
+                    </div>
+                    
+                    <div class="card-body">
+                        <!-- Formulario principal -->
+                        <form id="downloadForm">
+                            <div class="mb-3">
+                                <label for="spotifyUrl" class="form-label">
+                                    <i class="fas fa-link"></i> URL de Spotify
+                                </label>
+                                <input type="url" class="form-control" id="spotifyUrl" 
+                                       placeholder="https://open.spotify.com/track/..." required>
+                                <div class="form-text">
+                                    Pega aquí la URL de una canción, álbum o playlist de Spotify
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="format" class="form-label">
+                                            <i class="fas fa-file-audio"></i> Formato
+                                        </label>
+                                        <select class="form-select" id="format">
+                                            {% for format in formats %}
+                                            <option value="{{ format }}" {% if format == 'mp3' %}selected{% endif %}>
+                                                {{ format.upper() }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="quality" class="form-label">
+                                            <i class="fas fa-star"></i> Calidad
+                                        </label>
+                                        <select class="form-select" id="quality">
+                                            {% for quality in qualities %}
+                                            <option value="{{ quality }}" {% if quality == '320k' %}selected{% endif %}>
+                                                {{ quality }}bps
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-primary btn-lg" id="downloadBtn">
+                                    <i class="fas fa-download"></i> Descargar
+                                </button>
+                                <button type="button" class="btn btn-success btn-lg" id="downloadPlaylistBtn">
+                                    <i class="fas fa-file-archive"></i> Descargar como ZIP (Playlist)
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- Área de progreso -->
+                        <div id="progressArea" class="mt-4" style="display: none;">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-spinner fa-spin"></i> Estado de la descarga:</h6>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                             role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <p id="statusText" class="mb-0">Iniciando...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Área de resultados -->
+                        <div id="resultArea" class="mt-4" style="display: none;">
+                            <div class="alert" id="resultAlert">
+                                <div id="resultContent"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer text-muted text-center">
+                        <small>
+                            <i class="fas fa-info-circle"></i> 
+                            Solo para uso personal y educativo. Respeta los derechos de autor.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

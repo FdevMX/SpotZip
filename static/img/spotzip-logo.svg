@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+    <defs>
+        <linearGradient id="spotifyGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#1DB954;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1ED760;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="zipGray" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#6C757D;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#495057;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+
+    <!-- Fondo circular principal -->
+    <circle cx="60" cy="60" r="58" fill="url(#spotifyGreen)" stroke="#fff" stroke-width="2" />
+
+    <!-- Ondas de sonido estilo Spotify (lado izquierdo) -->
+    <path d="M25 35 Q45 30, 65 35" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" />
+    <path d="M20 45 Q45 38, 70 45" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" />
+    <path d="M18 55 Q45 46, 72 55" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" />
+
+    <!-- Archivo ZIP (lado derecho) -->
+    <rect x="65" y="70" width="25" height="30" rx="2" fill="url(#zipGray)" stroke="#fff" stroke-width="1.5" />
+
+    <!-- Cremallera del ZIP -->
+    <rect x="77" y="65" width="1.5" height="10" fill="#fff" />
+    <rect x="74" y="68" width="8" height="2" rx="1" fill="#fff" />
+
+    <!-- Texto ZIP en el archivo -->
+    <text x="77.5" y="90" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="#fff"
+        text-anchor="middle">ZIP</text>
+
+    <!-- Partículas de descarga -->
+    <circle cx="45" cy="65" r="1.5" fill="#fff" opacity="0.8" />
+    <circle cx="50" cy="72" r="1" fill="#fff" opacity="0.6" />
+    <circle cx="55" cy="68" r="1.2" fill="#fff" opacity="0.7" />
+
+    <!-- Flecha de descarga pequeña -->
+    <path d="M52 75 L52 82 M48 78 L52 82 L56 78" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"
+        stroke-linejoin="round" />
+</svg>
