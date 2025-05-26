@@ -47,7 +47,11 @@ def download_single():
     data = request.get_json()
     url = data.get("url")
     format_type = data.get("format", "mp3")
-    quality = data.get("quality", "320k")
+    quality = data.get("quality", "320k")  # Default quality
+
+    # Para FLAC, usar una calidad por defecto o ignorar el parámetro
+    if format_type == "flac":
+        quality = "320k"  # spotdl usa esto internamente para FLAC
 
     if not downloader.is_valid_spotify_url(url):
         return jsonify({"success": False, "message": "URL no válida"})
@@ -82,7 +86,11 @@ def download_playlist():
     data = request.get_json()
     url = data.get("url")
     format_type = data.get("format", "mp3")
-    quality = data.get("quality", "320k")
+    quality = data.get("quality", "320k")  # Default quality
+
+    # Para FLAC, usar una calidad por defecto o ignorar el parámetro
+    if format_type == "flac":
+        quality = "320k"  # spotdl usa esto internamente para FLAC
 
     if not downloader.is_valid_spotify_url(url):
         return jsonify({"success": False, "message": "URL no válida"})
