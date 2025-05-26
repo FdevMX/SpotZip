@@ -1,3 +1,95 @@
+// Función para inicializar todos los selectores personalizados en la página
+function initializeCustomSelects() {
+    // Obtener todos los wrappers de selectores personalizados
+    const selectWrappers = document.querySelectorAll('.custom-select-wrapper');
+
+    selectWrappers.forEach(wrapper => {
+        const originalSelect = wrapper.querySelector('.original-select');
+        if (!originalSelect) return;
+
+        // Crear la estructura del selector personalizado
+        const customSelectContainer = document.createElement('div');
+        customSelectContainer.classList.add('custom-select-container');
+        customSelectContainer.setAttribute('tabindex', '0'); // Para permitir enfocar con teclado
+
+        const trigger = document.createElement('div');
+        trigger.classList.add('custom-select-trigger');
+
+        const selectedDisplay = document.createElement('span');
+        trigger.appendChild(selectedDisplay);
+
+        const arrow = document.createElement('div');
+        arrow.classList.add('custom-arrow');
+        trigger.appendChild(arrow);
+
+        customSelectContainer.appendChild(trigger);
+
+        const optionsList = document.createElement('div');
+        optionsList.classList.add('custom-options-list');
+
+        // Poblar las opciones personalizadas desde el select original
+        Array.from(originalSelect.options).forEach((optionElement, index) => {
+            const customOption = document.createElement('div');
+            customOption.classList.add('custom-option');
+            customOption.textContent = optionElement.textContent;
+            customOption.dataset.value = optionElement.value;
+
+            if (optionElement.selected) {
+                selectedDisplay.textContent = optionElement.textContent;
+                customOption.classList.add('selected');
+            }
+
+            customOption.addEventListener('click', () => {
+                // Actualizar el valor seleccionado
+                selectedDisplay.textContent = customOption.textContent;
+                originalSelect.value = customOption.dataset.value;
+
+                // Actualizar la clase 'selected' en las opciones personalizadas
+                optionsList.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                customOption.classList.add('selected');
+
+                // Cerrar la lista de opciones
+                customSelectContainer.classList.remove('open');
+                optionsList.style.display = 'none';
+
+                // Disparar un evento de cambio en el select original si es necesario
+                const event = new Event('change', { bubbles: true });
+                originalSelect.dispatchEvent(event);
+            });
+            optionsList.appendChild(customOption);
+        });
+
+        customSelectContainer.appendChild(optionsList);
+        wrapper.appendChild(customSelectContainer); // Añadir el contenedor personalizado al wrapper
+
+        // Event listener para abrir/cerrar la lista de opciones
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evitar que el click se propague al documento
+            const isOpen = customSelectContainer.classList.toggle('open');
+            optionsList.style.display = isOpen ? 'block' : 'none';
+        });
+        
+        // También permitir abrir/cerrar con Enter o Espacio cuando el contenedor está enfocado
+        customSelectContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                trigger.click();
+            }
+        });
+
+    });
+
+    // Cerrar todos los selectores personalizados si se hace clic fuera de ellos
+    document.addEventListener('click', (e) => {
+        document.querySelectorAll('.custom-select-container.open').forEach(container => {
+            if (!container.contains(e.target)) {
+                container.classList.remove('open');
+                container.querySelector('.custom-options-list').style.display = 'none';
+            }
+        });
+    });
+}
+
 class SpotZipDownloader {
     constructor() {
         this.init();
@@ -184,15 +276,13 @@ class SpotZipDownloader {
                 this.showMessage('danger', 'Error monitoreando el progreso');
             }
         }, 1000);
-    }
-
-    showProgress() {
-        document.getElementById('progressArea').style.display = 'block';
-        document.getElementById('resultArea').style.display = 'none';
+    }    showProgress() {
+        document.getElementById('progressArea').classList.remove('hidden');
+        document.getElementById('resultArea').classList.add('hidden');
     }
 
     hideProgress() {
-        document.getElementById('progressArea').style.display = 'none';
+        document.getElementById('progressArea').classList.add('hidden');
     }
 
     updateProgress(status) {
@@ -209,21 +299,19 @@ class SpotZipDownloader {
         } else if (status.includes('exitosamente')) {
             progressBar.style.width = '100%';
         }
-    }
-
-    showDownloadLink(filename) {
+    }    showDownloadLink(filename) {
         const resultArea = document.getElementById('resultArea');
         const resultAlert = document.getElementById('resultAlert');
         const resultContent = document.getElementById('resultContent');
         
         resultAlert.className = 'alert alert-success';
         resultContent.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <h6 class="mb-1">
+            <div class="alert-content">
+                <div class="alert-info">
+                    <div class="alert-title">
                         <i class="fas fa-check-circle"></i> ¡Playlist descargada exitosamente!
-                    </h6>
-                    <p class="mb-0">Tu archivo ZIP está listo para descargar</p>
+                    </div>
+                    <p class="alert-text">Tu archivo ZIP está listo para descargar</p>
                 </div>
                 <a href="/download_zip/${filename}" class="download-link">
                     <i class="fas fa-download"></i> Descargar ZIP
@@ -231,7 +319,7 @@ class SpotZipDownloader {
             </div>
         `;
         
-        resultArea.style.display = 'block';
+        resultArea.classList.remove('hidden');
     }
 
     showMessage(type, message) {
@@ -245,12 +333,12 @@ class SpotZipDownloader {
             ${message}
         `;
         
-        resultArea.style.display = 'block';
+        resultArea.classList.remove('hidden');
         
         // Auto-hide success messages after 5 seconds
         if (type === 'success') {
             setTimeout(() => {
-                resultArea.style.display = 'none';
+                resultArea.classList.add('hidden');
             }, 5000);
         }
     }
@@ -271,5 +359,6 @@ class SpotZipDownloader {
 
 // Inicializar la aplicación cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
+    initializeCustomSelects(); // Inicializar los selectores personalizados
     new SpotZipDownloader();
 });
