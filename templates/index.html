@@ -53,17 +53,16 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="form-group">
+                        </div>                        
+                        <div class="form-group" id="qualityGroup">
                             <label for="quality" class="form-label">
                                 <i class="fas fa-star"></i> Calidad
                             </label>
                             <div class="custom-select-wrapper">
                                 <select class="original-select" id="quality" name="quality">
                                     {% for quality in qualities %}
-                                    <option value="{{ quality }}" {% if quality == '320k' %}selected{% endif %}>
-                                        {{ quality }}bps
+                                    <option value="{{ quality.value }}" {% if quality.value == '320k' %}selected{% endif %}>
+                                        {{ quality.label }}
                                     </option>
                                     {% endfor %}
                                 </select>
