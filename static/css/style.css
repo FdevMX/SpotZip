@@ -405,6 +405,33 @@ body {
 
 /* --- Fin Estilos para Custom Select --- */
 
+/* Estilos para elementos deshabilitados */
+.form-group.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.form-group.disabled .form-label {
+    color: var(--text-secondary);
+}
+
+.form-group.disabled .custom-select-container {
+    background-color: #E0E4E8;
+    border-color: var(--text-secondary);
+    box-shadow: 0 3px 0 var(--text-secondary);
+    cursor: not-allowed;
+}
+
+.form-group.disabled .custom-select-trigger {
+    color: var(--text-secondary);
+}
+
+.form-group.disabled .custom-arrow {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235A677D'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+}
+
+/* --- Fin Estilos para Custom Select --- */
+
 
 /* Área de progreso */
 .progress-section {
