@@ -2,7 +2,7 @@
 
 **SpotZip** es una aplicación web moderna para descargar canciones y playlists de Spotify con una interfaz intuitiva y amigable.
 
-![SpotZip Logo](static/img/spotzip-logo.svg)
+![SpotZip Logo](static/img/logo.svg)
 
 ## ✨ Características
 
@@ -81,9 +81,8 @@ SpotZip/
 ## 🛠️ Tecnologías Utilizadas
 
 - **Backend**: Flask (Python)
-- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
-- **Descarga de música**: spotdl
-- **Diseño**: CSS Grid, Flexbox, Gradientes
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Diseño**: CSS Grid, Flexbox
 
 ## ⚖️ Consideraciones Legales
 
