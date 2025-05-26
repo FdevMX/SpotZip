@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+    <defs>
+        <style>
+            .logo-main-fill { fill: #FF7A59; } /* Coral Vibrante */
+            .logo-main-stroke { stroke: #2A303C; } /* Gris Pizarra Oscuro */
+            .logo-zip-fill { fill: #2A303C; } /* Gris Pizarra Oscuro */
+            .logo-accent-elements { stroke: #FFFFFF; fill: #FFFFFF; } /* Blanco */
+            .logo-zip-text { fill: #FFFFFF; } /* Blanco */
+        </style>
+    </defs>
+
+    <circle cx="60" cy="60" r="56" class="logo-main-fill" />
+    <circle cx="60" cy="60" r="56" class="logo-main-stroke" stroke-width="4" fill="none"/>
+
+    <g class="logo-accent-elements">
+        <path d="M30 40 Q45 35, 60 40" stroke-width="4" fill="none" stroke-linecap="round" />
+        <path d="M25 50 Q45 43, 65 50" stroke-width="5" fill="none" stroke-linecap="round" />
+        <path d="M22 60 Q45 51, 68 60" stroke-width="6" fill="none" stroke-linecap="round" />
+    </g>
+
+    <g transform="translate(5, 5)"> <rect x="62" y="68" width="30" height="35" rx="3" class="logo-zip-fill" stroke="#FFFFFF" stroke-width="2" />
+
+        <rect x="76" y="62" width="2.5" height="12" class="logo-accent-elements" rx="1"/>
+        <rect x="72.75" y="65" width="9.5" height="3" class="logo-accent-elements" rx="1.5"/>
+
+        <text x="77" y="91" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="bold" class="logo-zip-text" text-anchor="middle">ZIP</text>
+    </g>
+
+    <g class="logo-accent-elements" transform="translate(0, 5)">
+        <path d="M50 70 L50 80 M45 76 L50 80 L55 76" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+
+    <!--
+    <g class="logo-accent-elements" opacity="0.9">
+        <circle cx="42" cy="65" r="1.8" />
+        <circle cx="58" cy="68" r="1.5" />
+        <circle cx="45" cy="85" r="1.2" />
+    </g>
+    -->
+</svg>
