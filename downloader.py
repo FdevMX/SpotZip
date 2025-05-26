@@ -143,8 +143,13 @@ class SpotifyDownloader:
 
     def get_available_formats(self):
         """Retorna los formatos disponibles"""
-        return ["mp3", "m4a", "flac", "ogg", "opus"]
+        return ["mp3", "m4a", "flac"]
 
     def get_available_qualities(self):
         """Retorna las calidades disponibles"""
-        return ["96k", "128k", "160k", "192k", "256k", "320k"]
+        return [
+            {"value": "128k", "label": "128 kbps - Estándar"},
+            {"value": "192k", "label": "192 kbps - Buena"},
+            {"value": "256k", "label": "256 kbps - Excelente"},
+            {"value": "320k", "label": "320 kbps - Máxima"}
+        ]
