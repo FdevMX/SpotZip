@@ -99,8 +99,7 @@ class SpotZipDownloader {
     init() {
         this.bindEvents();
         this.validateInitialState();
-    }
-
+    }    
     bindEvents() {
         document.getElementById('downloadBtn').addEventListener('click', () => {
             this.downloadSingle();
@@ -113,13 +112,126 @@ class SpotZipDownloader {
         document.getElementById('spotifyUrl').addEventListener('input', (e) => {
             this.validateUrl(e.target.value);
         });
-    }
 
+        // Event listener para el cambio de formato
+        document.getElementById('format').addEventListener('change', (e) => {
+            this.handleFormatChange(e.target.value);
+        });
+
+        // Verificar formato inicial al cargar la página
+        const initialFormat = document.getElementById('format').value;
+        this.handleFormatChange(initialFormat);
+    }    
     validateInitialState() {
         const downloadBtn = document.getElementById('downloadBtn');
         const playlistBtn = document.getElementById('downloadPlaylistBtn');
         downloadBtn.disabled = true;
         playlistBtn.disabled = true;
+    }
+
+    handleFormatChange(format) {
+        const qualityGroup = document.getElementById('qualityGroup');
+        const qualitySelect = document.getElementById('quality');
+        
+        if (format === 'flac') {
+            // Para FLAC, deshabilitar el selector de calidad
+            qualityGroup.classList.add('disabled');
+            qualitySelect.disabled = true;
+            
+            // Reinicializar el custom select para FLAC
+            this.reinitializeQualitySelect(true);
+        } else {
+            // Para MP3 y M4A, habilitar el selector de calidad
+            qualityGroup.classList.remove('disabled');
+            qualitySelect.disabled = false;
+            
+            // Reinicializar el custom select para MP3/M4A
+            this.reinitializeQualitySelect(false);
+        }
+    }
+
+    reinitializeQualitySelect(isDisabled) {
+        const qualityWrapper = document.querySelector('#qualityGroup .custom-select-wrapper');
+        const existingCustomSelect = qualityWrapper.querySelector('.custom-select-container');
+        
+        // Remover el custom select existente si existe
+        if (existingCustomSelect) {
+            existingCustomSelect.remove();
+        }
+        
+        // Reinicializar solo este selector
+        const originalSelect = qualityWrapper.querySelector('.original-select');
+        if (!originalSelect) return;
+
+        const customSelectContainer = document.createElement('div');
+        customSelectContainer.classList.add('custom-select-container');
+        if (!isDisabled) {
+            customSelectContainer.setAttribute('tabindex', '0');
+        }
+
+        const trigger = document.createElement('div');
+        trigger.classList.add('custom-select-trigger');
+
+        const selectedDisplay = document.createElement('span');
+        trigger.appendChild(selectedDisplay);
+
+        const arrow = document.createElement('div');
+        arrow.classList.add('custom-arrow');
+        trigger.appendChild(arrow);
+
+        customSelectContainer.appendChild(trigger);
+
+        const optionsList = document.createElement('div');
+        optionsList.classList.add('custom-options-list');
+
+        // Poblar las opciones
+        Array.from(originalSelect.options).forEach((optionElement, index) => {
+            const customOption = document.createElement('div');
+            customOption.classList.add('custom-option');
+            customOption.textContent = optionElement.textContent;
+            customOption.dataset.value = optionElement.value;
+
+            if (optionElement.selected) {
+                selectedDisplay.textContent = optionElement.textContent;
+                customOption.classList.add('selected');
+            }
+
+            if (!isDisabled) {
+                customOption.addEventListener('click', () => {
+                    selectedDisplay.textContent = customOption.textContent;
+                    originalSelect.value = customOption.dataset.value;
+
+                    optionsList.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+                    customOption.classList.add('selected');
+
+                    customSelectContainer.classList.remove('open');
+                    optionsList.style.display = 'none';
+
+                    const event = new Event('change', { bubbles: true });
+                    originalSelect.dispatchEvent(event);
+                });
+            }
+            optionsList.appendChild(customOption);
+        });
+
+        customSelectContainer.appendChild(optionsList);
+        qualityWrapper.appendChild(customSelectContainer);
+
+        // Event listeners solo si no está deshabilitado
+        if (!isDisabled) {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = customSelectContainer.classList.toggle('open');
+                optionsList.style.display = isOpen ? 'block' : 'none';
+            });
+            
+            customSelectContainer.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    trigger.click();
+                }
+            });
+        }
     }
 
     async validateUrl(url) {
@@ -157,12 +269,16 @@ class SpotZipDownloader {
             downloadBtn.disabled = true;
             playlistBtn.disabled = true;
         }
-    }
-
+    }    
     async downloadSingle() {
         const url = document.getElementById('spotifyUrl').value;
         const format = document.getElementById('format').value;
-        const quality = document.getElementById('quality').value;
+        let quality = document.getElementById('quality').value;
+
+        // Para FLAC, no necesitamos quality parameter
+        if (format === 'flac') {
+            quality = null;
+        }
 
         if (!url.trim()) {
             this.showMessage('danger', 'Por favor ingresa una URL válida');
@@ -173,16 +289,22 @@ class SpotZipDownloader {
         this.disableButtons();
 
         try {
+            const requestBody = {
+                url: url,
+                format: format
+            };
+            
+            // Solo añadir quality si no es FLAC
+            if (quality) {
+                requestBody.quality = quality;
+            }
+
             const response = await fetch('/download_single', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    url: url,
-                    format: format,
-                    quality: quality
-                })
+                body: JSON.stringify(requestBody)
             });
 
             const result = await response.json();
@@ -200,12 +322,16 @@ class SpotZipDownloader {
             this.enableButtons();
             this.showMessage('danger', 'Error de conexión');
         }
-    }
-
+    }    
     async downloadPlaylist() {
         const url = document.getElementById('spotifyUrl').value;
         const format = document.getElementById('format').value;
-        const quality = document.getElementById('quality').value;
+        let quality = document.getElementById('quality').value;
+
+        // Para FLAC, no necesitamos quality parameter
+        if (format === 'flac') {
+            quality = null;
+        }
 
         if (!url.trim()) {
             this.showMessage('danger', 'Por favor ingresa una URL válida');
@@ -216,16 +342,22 @@ class SpotZipDownloader {
         this.disableButtons();
 
         try {
+            const requestBody = {
+                url: url,
+                format: format
+            };
+            
+            // Solo añadir quality si no es FLAC
+            if (quality) {
+                requestBody.quality = quality;
+            }
+
             const response = await fetch('/download_playlist', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    url: url,
-                    format: format,
-                    quality: quality
-                })
+                body: JSON.stringify(requestBody)
             });
 
             const result = await response.json();
