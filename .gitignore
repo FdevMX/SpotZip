@@ -33,3 +33,6 @@ config.ini
 # Logs
 *.log
 logs/
+
+
+design/
